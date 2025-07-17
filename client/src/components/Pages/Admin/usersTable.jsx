@@ -40,6 +40,7 @@
                   <th style={styles.th}>State</th>
                   <th style={styles.th}>Country</th>
                   <th style={styles.th}>Category</th>
+                  <th style={styles.th}>Institution</th>
                 </tr>
               </thead>
               <tbody>
@@ -59,6 +60,7 @@
                       <td style={styles.td}>{user.state}</td>
                       <td style={styles.td}>{user.country}</td>
                       <td style={styles.td}>{user.category}</td>
+                      <td style={styles.td}>{user.institutionName}</td>
                     </tr>
                   ))
                 ) : (

@@ -1,8 +1,8 @@
 // src/components/Login.js
 import React, { useState } from "react";
 import { signInWithEmailAndPassword, sendPasswordResetEmail } from 'firebase/auth';
-import { auth } from '../firebase/confir';
-import "./css/Login.css";
+import { auth } from '../../../firebase/confir';
+import "../../css/Login.css";
 import { useNavigate } from "react-router-dom";
 import ForgotPasswordFlow from './ForgotPasswordFlow';
 

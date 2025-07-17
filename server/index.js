@@ -12,8 +12,8 @@ const { db, auth } = require('./firebase');
 const registerRoutes = require('./routes/register');
 
 // ==== CONFIGURATION ====
-const GMAIL_USER = 'yourgmail@gmail.com';            // your gmail
-const GMAIL_PASS = 'your_app_password';              // gmail app password (not your regular one)
+const GMAIL_USER = 'dummyapk9.com';            // your gmail
+const GMAIL_PASS = '123Qwe!@#';              // gmail app password (not your regular one)
 const FRONTEND_URL = 'http://localhost:3000';        // your frontend url
 const REDIS_URL = 'redis://localhost:6379';          // redis url
 const PORT = 5000;

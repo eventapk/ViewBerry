@@ -1,11 +1,10 @@
 // src/App.js
 import React from "react";
 import { Routes, Route, Link } from "react-router-dom";
-
-import RegisterForm from "./components/RegisterFrom";
-import UsersTable from "./components/usersTable";
-import UserDetails from "./components/UserDetails";
-import Login from "./components/Login";
+import RegisterFrom from './components/Pages/Signup/RegisterFrom';
+import Login from './components/Pages/Signup/Login';
+import UserDetails from './components/Pages/Admin/UserDetails';
+import UsersTable from './components/Pages/Admin/usersTable';
 
 function App() {
   return (
@@ -18,7 +17,7 @@ function App() {
 
       <div style={styles.container}>
         <Routes>
-          <Route path="/" element={<RegisterForm />} />
+          <Route path="/" element={<RegisterFrom />} />
           <Route path="/login" element={<Login />} />
           <Route path="/table" element={<UsersTable />} />
           <Route path="/user/:id" element={<UserDetails />} />

@@ -5,7 +5,7 @@ const RegisterForm = () => {
   const [formData, setFormData] = useState({
     firstName: '', lastName: '', email: '', password: '',
     phone: '', address: '', country: '', state: '', city: '',
-    category: '', newCategory: ''
+    category: '', newCategory: '', institution: ''
   });
 
   const [categories, setCategories] = useState(["School", "Office", "College", "Others"]);
@@ -56,7 +56,7 @@ const RegisterForm = () => {
       setFormData({
         firstName: '', lastName: '', email: '', password: '',
         phone: '', address: '', country: '', state: '', city: '',
-        category: '', newCategory: ''
+        category: '', newCategory: '', institution: ''
       });
       setPasswordStrength('');
     } catch (err) {
@@ -99,6 +99,7 @@ const RegisterForm = () => {
         <input name="country" placeholder="Country" value={formData.country} onChange={handleChange} style={styles.input} required />
         <input name="state" placeholder="State" value={formData.state} onChange={handleChange} style={styles.input} required />
         <input name="city" placeholder="City" value={formData.city} onChange={handleChange} style={styles.input} required />
+        <input name="institution" placeholder="Institution" value={formData.institution} onChange={handleChange} style={styles.input} required />
 
         <select value={formData.category} onChange={handleCategoryChange} style={styles.input} required>
           <option value="">Select Category</option>
@@ -122,9 +123,9 @@ const RegisterForm = () => {
       </div>
 
       <div style={styles.buttonRow}>
-  <button type="submit" style={styles.submit}>Register</button>
-  <button type="button" style={styles.submit} onClick={() => window.location.href = "/login"}>Login</button>
-</div>
+        <button type="submit" style={styles.submit}>Register</button>
+        <button type="button" style={styles.submit} onClick={() => window.location.href = "/login"}>Login</button>
+      </div>
     </form>
   );
 };
@@ -201,6 +202,11 @@ const styles = {
     cursor: "pointer",
     fontSize: "16px",
     margin: "10px"
+  },
+  buttonRow: {
+    display: "flex",
+    justifyContent: "space-between",
+    gap: "20px"
   }
 };
 

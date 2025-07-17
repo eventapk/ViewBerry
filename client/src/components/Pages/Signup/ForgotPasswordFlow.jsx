@@ -7,7 +7,7 @@ import {
   getAuth, 
   sendPasswordResetEmail
 } from "firebase/auth";
-import './css/ForgotPasswordFlow.css';
+import '../../css/ForgotPasswordFlow.css';
 
 const ForgotPasswordFlow = ({ onBack }) => {
   const [currentStep, setCurrentStep] = useState(1);
