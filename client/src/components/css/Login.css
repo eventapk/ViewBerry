@@ -1,0 +1,89 @@
+/* src/components/Login.css */
+
+.login-container {
+  max-width: 360px;
+  margin: 80px auto;
+  padding: 40px 30px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.login-title {
+  margin-bottom: 30px;
+  font-weight: 700;
+  color: #2575fc;
+  text-align: center;
+  font-size: 1.8rem;
+}
+
+label {
+  margin-bottom: 6px;
+  font-weight: 600;
+  color: #555;
+}
+
+input[type="email"],
+input[type="password"] {
+  padding: 12px 14px;
+  margin-bottom: 20px;
+  border: 1.8px solid #ddd;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+}
+
+input[type="email"]:focus,
+input[type="password"]:focus {
+  border-color: #2575fc;
+  outline: none;
+  box-shadow: 0 0 8px rgba(37, 117, 252, 0.3);
+}
+
+.login-btn {
+  padding: 14px 0;
+  background-color: #2575fc;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.25s ease;
+}
+
+.login-btn:hover {
+  background-color: #1b55d1;
+}
+
+.error-msg {
+  margin-bottom: 15px;
+  color: #cc0000;
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-align: center;
+}
+.forgot-password-link{
+  text-align: center;
+  margin-bottom: 10px;
+}
+.forgot-password-btn {
+  background: none;
+  border: none;
+  color: #007bff; /* Bootstrap blue, change if needed */
+  font-size: 0.9rem;
+  margin-top: 10px;
+  padding: 0;
+  cursor: pointer;
+}
+
+.forgot-password-btn:hover {
+  text-decoration: underline;
+  color: #0056b3; /* Darker blue on hover */
+}
