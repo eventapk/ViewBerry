@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import { useAuth } from '../../../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
+import api from '../../utils/api';
 
 const RegisterForm = () => {
+  const { user } = useAuth();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     firstName: '', lastName: '', email: '', password: '',
     phone: '', address: '', country: '', state: '', city: '',
@@ -11,6 +15,14 @@ const RegisterForm = () => {
   const [categories, setCategories] = useState(["School", "Office", "College", "Others"]);
   const [showPassword, setShowPassword] = useState(false);
   const [passwordStrength, setPasswordStrength] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  // Redirect if already logged in
+  React.useEffect(() => {
+    if (user) {
+      navigate("/table");
+    }
+  }, [user, navigate]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -46,10 +58,11 @@ const RegisterForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     const { email, password, newCategory, ...userData } = formData;
 
     try {
-      const response = await axios.post("http://localhost:5000/api/register", {
+      const response = await api.post("/register", {
         email, password, ...userData
       });
       alert("✅ " + response.data.message);
@@ -59,8 +72,11 @@ const RegisterForm = () => {
         category: '', newCategory: '', institution: ''
       });
       setPasswordStrength('');
+      navigate("/login");
     } catch (err) {
       alert("❌ Registration failed: " + (err.response?.data?.error || err.message));
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -69,9 +85,34 @@ const RegisterForm = () => {
       <h2 style={styles.title}>🚀 User Registration</h2>
 
       <div style={styles.grid}>
-        <input name="firstName" placeholder="First Name" value={formData.firstName} onChange={handleChange} style={styles.input} required />
-        <input name="lastName" placeholder="Last Name" value={formData.lastName} onChange={handleChange} style={styles.input} required />
-        <input type="email" name="email" placeholder="Email" value={formData.email} onChange={handleChange} style={styles.input} required />
+        <input 
+          name="firstName" 
+          placeholder="First Name" 
+          value={formData.firstName} 
+          onChange={handleChange} 
+          style={styles.input} 
+          required 
+          disabled={loading}
+        />
+        <input 
+          name="lastName" 
+          placeholder="Last Name" 
+          value={formData.lastName} 
+          onChange={handleChange} 
+          style={styles.input} 
+          required 
+          disabled={loading}
+        />
+        <input 
+          type="email" 
+          name="email" 
+          placeholder="Email" 
+          value={formData.email} 
+          onChange={handleChange} 
+          style={styles.input} 
+          required 
+          disabled={loading}
+        />
 
         <div style={styles.passwordContainer}>
           <input
@@ -82,8 +123,14 @@ const RegisterForm = () => {
             onChange={handleChange}
             style={styles.input}
             required
+            disabled={loading}
           />
-          <button type="button" onClick={() => setShowPassword(!showPassword)} style={styles.showBtn}>
+          <button 
+            type="button" 
+            onClick={() => setShowPassword(!showPassword)} 
+            style={styles.showBtn}
+            disabled={loading}
+          >
             {showPassword ? "Hide" : "Show"}
           </button>
         </div>
@@ -94,14 +141,68 @@ const RegisterForm = () => {
           </div>
         )}
 
-        <input name="phone" placeholder="Phone" value={formData.phone} onChange={handleChange} style={styles.input} required />
-        <input name="address" placeholder="Address" value={formData.address} onChange={handleChange} style={styles.input} required />
-        <input name="country" placeholder="Country" value={formData.country} onChange={handleChange} style={styles.input} required />
-        <input name="state" placeholder="State" value={formData.state} onChange={handleChange} style={styles.input} required />
-        <input name="city" placeholder="City" value={formData.city} onChange={handleChange} style={styles.input} required />
-        <input name="institution" placeholder="Institution" value={formData.institution} onChange={handleChange} style={styles.input} required />
+        <input 
+          name="phone" 
+          placeholder="Phone" 
+          value={formData.phone} 
+          onChange={handleChange} 
+          style={styles.input} 
+          required 
+          disabled={loading}
+        />
+        <input 
+          name="address" 
+          placeholder="Address" 
+          value={formData.address} 
+          onChange={handleChange} 
+          style={styles.input} 
+          required 
+          disabled={loading}
+        />
+        <input 
+          name="country" 
+          placeholder="Country" 
+          value={formData.country} 
+          onChange={handleChange} 
+          style={styles.input} 
+          required 
+          disabled={loading}
+        />
+        <input 
+          name="state" 
+          placeholder="State" 
+          value={formData.state} 
+          onChange={handleChange} 
+          style={styles.input} 
+          required 
+          disabled={loading}
+        />
+        <input 
+          name="city" 
+          placeholder="City" 
+          value={formData.city} 
+          onChange={handleChange} 
+          style={styles.input} 
+          required 
+          disabled={loading}
+        />
+        <input 
+          name="institution" 
+          placeholder="Institution" 
+          value={formData.institution} 
+          onChange={handleChange} 
+          style={styles.input} 
+          required 
+          disabled={loading}
+        />
 
-        <select value={formData.category} onChange={handleCategoryChange} style={styles.input} required>
+        <select 
+          value={formData.category} 
+          onChange={handleCategoryChange} 
+          style={styles.input} 
+          required
+          disabled={loading}
+        >
           <option value="">Select Category</option>
           {categories.map((cat, i) => (
             <option key={i} value={cat}>{cat}</option>
@@ -116,15 +217,32 @@ const RegisterForm = () => {
               value={formData.newCategory}
               onChange={handleChange}
               style={styles.input}
+              disabled={loading}
             />
-            <button type="button" onClick={addNewCategory} style={styles.addBtn}>+ Add Category</button>
+            <button 
+              type="button" 
+              onClick={addNewCategory} 
+              style={styles.addBtn}
+              disabled={loading}
+            >
+              + Add Category
+            </button>
           </>
         )}
       </div>
 
       <div style={styles.buttonRow}>
-        <button type="submit" style={styles.submit}>Register</button>
-        <button type="button" style={styles.submit} onClick={() => window.location.href = "/login"}>Login</button>
+        <button type="submit" style={styles.submit} disabled={loading}>
+          {loading ? 'Registering...' : 'Register'}
+        </button>
+        <button 
+          type="button" 
+          style={styles.submit} 
+          onClick={() => navigate("/login")}
+          disabled={loading}
+        >
+          Login
+        </button>
       </div>
     </form>
   );

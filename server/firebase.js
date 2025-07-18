@@ -22,7 +22,7 @@ try {
 
     // Fix escaped newlines in private key
     if (serviceAccount.private_key) {
-      serviceAccount.private_key = serviceAccount.private_key.replace(/\\n/g, '\n');
+        serviceAccount.private_key = serviceAccount.private_key.replace(/\\n/g, '\n');
     }
 } catch (error) {
     console.error("Error loading service account file:", error.message);
@@ -31,11 +31,13 @@ try {
     process.exit(1);
 }
 
-// Initialize Firebase Admin with service account credentials
-admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
-    databaseURL: "https://virtual-360-449a8.firebaseio.com"  // Replace with your Firebase DB URL
-});
+// ✅ Initialize only if not already initialized
+if (!admin.apps.length) {
+    admin.initializeApp({
+        credential: admin.credential.cert(serviceAccount),
+        databaseURL: "https://virtual-360-449a8.firebaseio.com"  // Replace with your Firebase DB URL
+    });
+}
 
 // Get Firestore and Auth instances
 const db = admin.firestore();

@@ -1,7 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const { db, auth } = require('../firebase');
+const { validateUserData, validatePassword } = require('../utils/validation');
 
+// Register route
 router.post('/register', async (req, res) => {
   try {
     const {
@@ -14,7 +16,11 @@ router.post('/register', async (req, res) => {
       return res.status(400).json({ error: "Missing required fields" });
     }
 
-    // Check if institution exists
+    if (!validatePassword(password)) {
+      return res.status(400).json({ error: 'Password must be at least 6 characters long' });
+    }
+
+    // Check or create institution
     const institutionSnap = await db.collection('institutions')
       .where('name', '==', institution.trim())
       .limit(1)
@@ -50,7 +56,7 @@ router.post('/register', async (req, res) => {
       state: state || '',
       city: city || '',
       category: category || '',
-      institutionId: institutionId,
+      institutionId,
       createdAt: new Date().toISOString(),
     });
 
@@ -58,50 +64,9 @@ router.post('/register', async (req, res) => {
 
   } catch (error) {
     console.error('❌ Registration failed:', error);
-    res.status(500).json({ error: error.message });
-  }
-});
-
-// GET /api/users
-router.get('/users', async (req, res) => {
-  try {
-    const snapshot = await db.collection('users').get();
-
-    const users = await Promise.all(
-      snapshot.docs.map(async (doc) => {
-        const user = { id: doc.id, ...doc.data() };
-
-        // Fetch institution name using institutionId
-        if (user.institutionId) {
-          try {
-            const instDoc = await db.collection('institutions').doc(user.institutionId).get();
-            user.institutionName = instDoc.exists ? instDoc.data().name : 'Unknown';
-          } catch {
-            user.institutionName = 'Unknown';
-          }
-        } else {
-          user.institutionName = 'N/A';
-        }
-
-        return user;
-      })
-    );
-
-    res.status(200).json(users);
-  } catch (error) {
-    console.error('❌ Failed to fetch users:', error);
-    res.status(500).json({ error: error.message });
-  }
-});
-
-
-// GET /api/users/:id
-router.get('/users/:id', async (req, res) => {
-  try {
-    const doc = await db.collection('users').doc(req.params.id).get();
-    if (!doc.exists) return res.status(404).json({ error: 'User not found' });
-    res.status(200).json(doc.data());
-  } catch (error) {
+    if (error.code === 'auth/email-already-exists') {
+      return res.status(400).json({ error: 'Email already in use' });
+    }
     res.status(500).json({ error: error.message });
   }
 });

@@ -1,89 +1,131 @@
-/* src/components/Login.css */
-
 .login-container {
-  max-width: 360px;
-  margin: 80px auto;
-  padding: 40px 30px;
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 20px;
 }
 
 .login-form {
-  display: flex;
-  flex-direction: column;
+  background: white;
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
 }
 
 .login-title {
-  margin-bottom: 30px;
-  font-weight: 700;
-  color: #2575fc;
   text-align: center;
-  font-size: 1.8rem;
+  margin-bottom: 30px;
+  color: #333;
+  font-size: 28px;
+  font-weight: 300;
 }
 
-label {
-  margin-bottom: 6px;
-  font-weight: 600;
+.login-form label {
+  display: block;
+  margin-bottom: 8px;
   color: #555;
+  font-weight: 500;
 }
 
-input[type="email"],
-input[type="password"] {
-  padding: 12px 14px;
+.login-form input {
+  width: 100%;
+  padding: 12px;
   margin-bottom: 20px;
-  border: 1.8px solid #ddd;
-  border-radius: 8px;
-  font-size: 1rem;
-  transition: border-color 0.3s ease;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 16px;
+  transition: border-color 0.3s;
 }
 
-input[type="email"]:focus,
-input[type="password"]:focus {
-  border-color: #2575fc;
+.login-form input:focus {
   outline: none;
-  box-shadow: 0 0 8px rgba(37, 117, 252, 0.3);
+  border-color: #667eea;
+}
+
+.login-form input:disabled {
+  background-color: #f5f5f5;
+  cursor: not-allowed;
 }
 
 .login-btn {
-  padding: 14px 0;
-  background-color: #2575fc;
-  border: none;
-  border-radius: 8px;
+  width: 100%;
+  padding: 12px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
-  font-size: 1.1rem;
-  font-weight: 700;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
   cursor: pointer;
-  transition: background-color 0.25s ease;
+  transition: opacity 0.3s;
 }
 
-.login-btn:hover {
-  background-color: #1b55d1;
+.login-btn:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.login-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.back-btn {
+  width: 100%;
+  padding: 12px;
+  background: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background-color 0.3s;
+}
+
+.back-btn:hover:not(:disabled) {
+  background: #5a6268;
 }
 
 .error-msg {
+  color: #dc3545;
+  background: #f8d7da;
+  padding: 10px;
+  border-radius: 4px;
   margin-bottom: 15px;
-  color: #cc0000;
-  font-weight: 600;
-  font-size: 0.9rem;
-  text-align: center;
+  font-size: 14px;
 }
-.forgot-password-link{
-  text-align: center;
-  margin-bottom: 10px;
+
+.success-msg {
+  color: #155724;
+  background: #d4edda;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 15px;
+  font-size: 14px;
 }
+
+.forgot-password-link {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
 .forgot-password-btn {
   background: none;
   border: none;
-  color: #007bff; /* Bootstrap blue, change if needed */
-  font-size: 0.9rem;
-  margin-top: 10px;
-  padding: 0;
+  color: #667eea;
+  text-decoration: underline;
   cursor: pointer;
+  font-size: 14px;
 }
 
-.forgot-password-btn:hover {
-  text-decoration: underline;
-  color: #0056b3; /* Darker blue on hover */
+.forgot-password-btn:hover:not(:disabled) {
+  color: #764ba2;
+}
+
+.forgot-password-btn:disabled {
+  color: #6c757d;
+  cursor: not-allowed;
 }

@@ -7,30 +7,92 @@ function UserDetails() {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/api/users/${id}`);
+        setLoading(true);
+        setError("");
+        
+        // Get the authentication token
+        const token = sessionStorage.getItem('authToken');
+        
+        if (!token) {
+          setError("No authentication token found. Please login.");
+          setLoading(false);
+          return;
+        }
+
+        console.log("Fetching user with ID:", id);
+        
+        const res = await axios.get(`http://localhost:5000/api/users/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        
+        console.log("User data received:", res.data);
+        
         if (res.data) {
-          setUser(res.data); // ✅ assuming backend returns full user object
+          setUser(res.data);
         } else {
           setError("User not found.");
         }
       } catch (err) {
-        console.error("❌ Error fetching user details:", err.message);
-        setError("Failed to load user.");
+        console.error("❌ Error fetching user details:", err);
+        
+        if (err.response?.status === 401) {
+          setError("Authentication failed. Please login again.");
+          sessionStorage.removeItem('authToken');
+        } else if (err.response?.status === 404) {
+          setError("User not found.");
+        } else {
+          setError(`Failed to load user: ${err.message}`);
+        }
+      } finally {
+        setLoading(false);
       }
     };
-    fetchUser();
+    
+    if (id) {
+      fetchUser();
+    } else {
+      setError("No user ID provided.");
+      setLoading(false);
+    }
   }, [id]);
 
+  if (loading) {
+    return <div style={styles.loading}>Loading user details...</div>;
+  }
+
   if (error) {
-    return <div style={styles.loading}>{error}</div>;
+    return (
+      <div style={styles.container}>
+        <div style={styles.card}>
+          <h2 style={styles.title}>👤 User Details</h2>
+          <div style={styles.error}>{error}</div>
+          <button style={styles.button} onClick={() => navigate("/table")}>
+            ⬅ Back to Users Table
+          </button>
+        </div>
+      </div>
+    );
   }
 
   if (!user) {
-    return <div style={styles.loading}>Loading user details...</div>;
+    return (
+      <div style={styles.container}>
+        <div style={styles.card}>
+          <h2 style={styles.title}>👤 User Details</h2>
+          <div style={styles.error}>User not found.</div>
+          <button style={styles.button} onClick={() => navigate("/table")}>
+            ⬅ Back to Users Table
+          </button>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -47,6 +109,7 @@ function UserDetails() {
           <Field label="State" value={user.state} />
           <Field label="Country" value={user.country} />
           <Field label="Category" value={user.category} />
+          <Field label="Institution" value={user.institutionName} />
         </div>
         <button style={styles.button} onClick={() => navigate("/table")}>
           ⬅ Back to Users Table
@@ -125,6 +188,15 @@ const styles = {
     paddingTop: "80px",
     fontSize: "18px",
     color: "#444",
+  },
+  error: {
+    textAlign: "center",
+    padding: "20px",
+    fontSize: "16px",
+    color: "#d32f2f",
+    backgroundColor: "#ffebee",
+    borderRadius: "4px",
+    marginBottom: "20px",
   },
 };
 

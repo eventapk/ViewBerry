@@ -1,47 +1,71 @@
-// src/App.js
-import React from "react";
-import { Routes, Route, Link } from "react-router-dom";
-import RegisterFrom from './components/Pages/Signup/RegisterFrom';
+// App.js
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { AuthProvider } from './context/AuthContext';
+import ProtectedRoute from './components/ProtectedRoute';
+
+import Header from './components/common/Header';
 import Login from './components/Pages/Signup/Login';
-import UserDetails from './components/Pages/Admin/UserDetails';
-import UsersTable from './components/Pages/Admin/usersTable';
+import RegisterForm from './components/Pages/Signup/RegisterFrom';
+import UserTable from './components/Pages/Admin/usersTable';
+import UserDetails from './components/Pages/Admin/UserDetails'; // Import your UserDetails component
 
 function App() {
   return (
-    <div className="App">
-      <nav style={styles.navbar}>
-        <Link to="/" style={styles.link}>Register</Link>
-        <Link to="/login" style={styles.link}>Login</Link>
-        <Link to="/table" style={styles.link}>Users Table</Link>
-      </nav>
+    <AuthProvider>
+      <Router>
+        <div className="App">
+          <Header />
+          
+          <Routes>
+            {/* Public Routes */}
+            <Route path="/" element={<RegisterForm />} />
+            <Route path="/login" element={<Login />} />
+            
+            
+            {/* Protected Routes */}
+            <Route
+              path="/table"
+              element={
+                <ProtectedRoute>
+                  <UserTable />
+                </ProtectedRoute>
+              }
+            />
+            
+            <Route
+              path="/table/user-table"
+              element={
+                <ProtectedRoute>
+                  <UserTable />
+                </ProtectedRoute>
+              }
+            />
 
-      <div style={styles.container}>
-        <Routes>
-          <Route path="/" element={<RegisterFrom />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/table" element={<UsersTable />} />
-          <Route path="/user/:id" element={<UserDetails />} />
-        </Routes>
-      </div>
-    </div>
+            {/* Add the UserDetails route */}
+            <Route
+              path="/user/:id"
+              element={
+                <ProtectedRoute>
+                  <UserDetails />
+                </ProtectedRoute>
+              }
+            />
+            
+            {/* Optional: Redirect root to login or table */}
+            <Route
+              path="/"
+              element={
+                <ProtectedRoute>
+                  <UserTable />
+                </ProtectedRoute>
+              }
+            />
+          </Routes>
+        </div>
+      </Router>
+    </AuthProvider>
   );
 }
-
-const styles = {
-  navbar: {
-    padding: "10px 20px",
-    background: "#2575fc",
-    display: "flex",
-    gap: "20px",
-  },
-  link: {
-    color: "white",
-    textDecoration: "none",
-    fontWeight: "bold",
-  },
-  container: {
-    padding: "20px",
-  },
-};
 
 export default App;
