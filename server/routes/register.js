@@ -4,7 +4,7 @@ const { db, auth } = require('../firebase');
 const { validateUserData, validatePassword } = require('../utils/validation');
 
 // Register route
-router.post('/register', async (req, res) => {
+router.post('/', async (req, res) => {
   try {
     const {
       firstName, lastName, email, password,

@@ -94,13 +94,32 @@ router.get('/users/all', async (req, res) => {
   }
 });
 
-// Get specific user by ID
+// Get specific user by ID with institution name
 router.get('/users/:id', async (req, res) => {
   try {
-    const doc = await db.collection('users').doc(req.params.id).get();
-    if (!doc.exists) return res.status(404).json({ error: 'User not found' });
-    res.status(200).json(doc.data());
+    const userDoc = await db.collection('users').doc(req.params.id).get();
+
+    if (!userDoc.exists) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    const userData = userDoc.data();
+
+    // If institutionId is present, fetch the institution name
+    if (userData.institutionId) {
+      const instDoc = await db.collection('institutions').doc(userData.institutionId).get();
+      if (instDoc.exists) {
+        userData.institutionName = instDoc.data().name;
+      } else {
+        userData.institutionName = 'Unknown Institution';
+      }
+    } else {
+      userData.institutionName = 'No Institution Assigned';
+    }
+
+    res.status(200).json(userData);
   } catch (error) {
+    console.error('Error fetching user with institution name:', error);
     res.status(500).json({ error: error.message });
   }
 });
