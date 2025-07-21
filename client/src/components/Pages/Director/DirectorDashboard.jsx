@@ -9,26 +9,24 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
+import { useSidebar } from '../Admin/SidebarContext'; // ✅ Import the sidebar context
 
-// ✅ Register the required chart components
 ChartJS.register(BarElement, CategoryScale, LinearScale, Title, Tooltip, Legend);
 
 const DirectorChart = () => {
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
+  const { isCollapsed, sidebarWidth } = useSidebar(); // ✅ Get sidebar state
 
   useEffect(() => {
     fetch('http://localhost:5000/api/dashboard/categories')
       .then(res => {
-        if (!res.ok) {
-          throw new Error(`Server error: ${res.status}`);
-        }
+        if (!res.ok) throw new Error(`Server error: ${res.status}`);
         return res.json();
       })
       .then(data => {
         const labels = Object.keys(data);
         const values = Object.values(data);
-
         setData({
           labels,
           datasets: [
@@ -49,7 +47,11 @@ const DirectorChart = () => {
   }, []);
 
   return (
-    <div>
+    <div style={{
+      marginLeft: `${sidebarWidth}px`, // ✅ Dynamic margin to shift with sidebar
+      padding: '1rem',
+      transition: 'margin-left 0.3s ease',
+    }}>
       <h2>Director Dashboard</h2>
       {error && <p style={{ color: 'red' }}>Error: {error}</p>}
       {!data && !error && <p>Loading chart...</p>}
@@ -67,17 +69,11 @@ const DirectorChart = () => {
             },
             scales: {
               x: {
-                title: {
-                  display: true,
-                  text: 'Category',
-                },
+                title: { display: true, text: 'Category' },
               },
               y: {
                 beginAtZero: true,
-                title: {
-                  display: true,
-                  text: 'User Count',
-                },
+                title: { display: true, text: 'User Count' },
               },
             },
           }}

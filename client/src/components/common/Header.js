@@ -117,7 +117,7 @@ const styles = {
   },
   navItem: {
     marginBottom: '1rem',
-    textAlign: 'center',
+    textAlign: 'left',
   },
   link: {
     color: '#fff',
