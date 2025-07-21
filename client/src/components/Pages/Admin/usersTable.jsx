@@ -1,43 +1,53 @@
-// src/components/UsersTable.jsx
+// src/components/Pages/Admin/usersTable.jsx
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useSidebar } from "./SidebarContext";
 import axios from "axios";
 
-const UsersTable = () => {
+const UserTable = () => {
   const [users, setUsers] = useState([]);
+  const { isCollapsed, sidebarWidth } = useSidebar();
   const navigate = useNavigate();
 
   useEffect(() => {
-  const fetchUsers = async () => {
-    try {
-      const token = sessionStorage.getItem('authToken');  // read token here
+    const fetchUsers = async () => {
+      try {
+        const token = sessionStorage.getItem('authToken');  // read token here
 
-      if (!token) {
-        console.log("No auth token found. Please login.");
-        return; // optionally redirect to login page here
+        if (!token) {
+          console.log("No auth token found. Please login.");
+          return; // optionally redirect to login page here
+        }
+
+        const response = await axios.get("http://localhost:5000/api/users/all", {
+          headers: {
+            Authorization: `Bearer ${token}`,  // send token as Bearer
+          },
+        });
+
+        setUsers(response.data || []);
+      } catch (err) {
+        console.error("❌ Error fetching users:", err.message);
       }
+    };
 
-      const response = await axios.get("http://localhost:5000/api/users/all", {
-        headers: {
-          Authorization: `Bearer ${token}`,  // send token as Bearer
-        },
-      });
-
-      setUsers(response.data || []);
-    } catch (err) {
-      console.error("❌ Error fetching users:", err.message);
-    }
-  };
-
-  fetchUsers();
-}, []);
+    fetchUsers();
+  }, []);
 
   const handleRowClick = (id) => {
     navigate(`/user/${id}`);
   };
 
+  // Dynamic container style based on sidebar state
+  const containerStyle = {
+    ...styles.container,
+    marginLeft: sidebarWidth,
+    width: `calc(100% - ${sidebarWidth}px)`,
+    transition: 'margin-left 0.3s ease, width 0.3s ease'
+  };
+
   return (
-    <div style={styles.container}>
+    <div style={containerStyle}>
       <div style={styles.card}>
         <h2 style={styles.heading}>👥 Firestore Users Table</h2>
         <div style={styles.scrollTable}>
@@ -62,7 +72,16 @@ const UsersTable = () => {
                   <tr
                     key={user.id}
                     onClick={() => handleRowClick(user.id)}
-                    style={styles.tr}
+                    style={{
+                      ...styles.tr,
+                      ':hover': styles.trHover
+                    }}
+                    onMouseEnter={(e) => {
+                      e.target.parentNode.style.backgroundColor = '#f5f5f5';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.target.parentNode.style.backgroundColor = 'transparent';
+                    }}
                   >
                     <td style={styles.td}>{user.firstName}</td>
                     <td style={styles.td}>{user.lastName}</td>
@@ -96,6 +115,8 @@ const styles = {
     padding: "40px 20px",
     display: "flex",
     justifyContent: "center",
+    position: "relative",
+    overflowX: "auto"
   },
   card: {
     backgroundColor: "#ffffff",
@@ -135,8 +156,11 @@ const styles = {
   },
   tr: {
     cursor: "pointer",
-    transition: "background 0.3s",
+    transition: "background-color 0.3s ease",
   },
+  trHover: {
+    backgroundColor: "#f5f5f5",
+  }
 };
 
-export default UsersTable;
+export default UserTable;

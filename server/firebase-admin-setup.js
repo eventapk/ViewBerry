@@ -22,4 +22,7 @@ if (!admin.apps.length) {
   });
 }
 
-module.exports = admin;
+// ✅ Export the Firestore database, not the admin object
+const db = admin.firestore();
+
+module.exports = db;
